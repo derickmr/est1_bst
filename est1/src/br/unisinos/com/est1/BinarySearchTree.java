@@ -231,35 +231,230 @@ public class BinarySearchTree<K extends Comparable<K>, V> implements BinarySearc
 
 	}
 
-	/*
-	 * public int degree(K key) {
-	 * 
-	 * Node temp = searchKey(root, key);
-	 * 
-	 * if (temp == null) return -1;
-	 * 
-	 * return degree(temp);
-	 * 
-	 * }
-	 */
+	@Override
+	public int countNodes() {
 
-	/*
-	 * private int degree(Node root) {
-	 * 
-	 * if (root.right != null) retorno++; if (root.left != null) retorno++;
-	 * 
-	 * return retorno;
-	 * 
-	 * }
-	 */
+		if (isEmpty())
+			return 0;
 
-	private Node searchKey(Node node, K key) {
+		return 1 + countNodes(root.left) + countNodes(root.right);
+
+	}
+
+	private int countNodes(Node node) {
+
+		if (node != null)
+			return 1 + (countNodes(node.left) + countNodes(node.right));
+
+		return 0;
+
+	}
+
+	@Override
+	public int countInternalNodes() {
+
+		if (isEmpty())
+			return 0;
+
+		return countInternalNodes(root.left) + countInternalNodes(root.right);
+	}
+
+	private int countInternalNodes(Node node) {
+
+		if (node != null && !node.isLeaf()) {
+
+			return 1 + (countInternalNodes(node.right) + countInternalNodes(node.left));
+		}
+
+		return 0;
+
+	}
+
+	@Override
+	public int countLeaves() {
+
+		if (isEmpty() || root.isLeaf())
+			return 0;
+
+		return countLeaves(root.left) + countLeaves(root.right);
+
+	}
+
+	private int countLeaves(Node node) {
+
+		if (node == null)
+			return 0;
+
+		if (!node.isLeaf())
+			return countLeaves(node.left) + countLeaves(node.right);
+
+		return 1;
+
+	}
+
+	public int degree(K key) {
+
+		if (isEmpty())
+			return -1;
+
+		return degree(root, key);
+
+	}
+
+	private int degree(Node node, K key) {
+		if (node == null) {
+			return -1;
+		} else if (key.compareTo(node.key) == 0) {
+			if (node.isLeaf())
+				return 0;
+			else {
+				if (node.right != null && node.left != null)
+					return 2;
+				return 1;
+			}
+		}
+		return degree(node.next(key), key);
+	}
+
+	@Override
+	public int degreeTree() {
+
+		if (isEmpty())
+			return -1;
+
+		return degreeTree(root, 0);
+
+	}
+
+	private int degreeTree(Node node, int maior) {
+
+		if (node != null) {
+
+			int deg = degree(node.key);
+
+			if (deg > maior)
+				maior = deg;
+
+			degreeTree(node.left, maior);
+			degreeTree(node.right, maior);
+
+		}
+
+		return maior;
+
+	}
+
+	@Override
+	public int height(K key) {
+		Node node = getNode(root, key);
+
+		if (node == null)
+			return -1;
+
+		return height(node, 0);
+	}
+
+	private int height(Node node, int h) {
+
+		if (node != null && !node.isLeaf()) {
+
+			int left = height(node.left, h + 1);
+			int right = height(node.right, h + 1);
+
+			if (left > h)
+				h = left;
+			if (right > h)
+				h = right;
+
+		}
+
+		return h;
+
+	}
+
+	@Override
+	public int heightTree() {
+
+		if (isEmpty())
+			return -1;
+
+		return height(root.key);
+
+	}
+
+	private Node getNode(Node node, K key) {
 		if (node == null) {
 			return null;
 		} else if (key.compareTo(node.key) == 0) {
 			return node;
 		}
-		return searchKey(node.next(key), key);
+		return getNode(node.next(key), key);
+	}
+
+	@Override
+	public int depth(K key) {
+
+		if (search(key) == null)
+			return -1;
+
+		return depth(root, key, 0);
+
+	}
+
+	private int depth(Node node, K key, int dpth) {
+
+		if (node.key.compareTo(key) != 0) {
+
+			return depth(node.next(key), key, dpth + 1);
+
+		}
+
+		return dpth;
+
+	}
+
+	@Override
+	public String ancestors(K key) {
+
+		if (search(key) == null)
+			return null;
+
+		return ancestors(root, key, "");
+
+	}
+
+	private String ancestors(Node node, K key, String anc) {
+
+		anc += "{" + node.key + "} ";
+
+		if (node.key.compareTo(key) != 0)
+			return ancestors(node.next(key), key, anc);
+
+		return anc;
+
+	}
+
+	@Override
+	public String descendents(K key) {
+
+		Node node = null;
+
+		if (!isEmpty())
+			node = getNode(root, key);
+
+		if (node == null)
+			return null;
+
+		return "{" + node.key + "} " + descendents(node.left) + descendents(node.right);
+	}
+
+	private String descendents(Node node) {
+
+		if (node != null)
+			return "{" + node.key + "} " + (descendents(node.left) + descendents(node.right));
+
+		return "";
+
 	}
 
 }
