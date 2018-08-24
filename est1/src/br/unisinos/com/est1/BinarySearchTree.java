@@ -294,28 +294,42 @@ public class BinarySearchTree<K extends Comparable<K>, V> implements BinarySearc
 
 	}
 
-	public int degree(K key) {
+	/*
+	 * public int degree(K key) {
+	 * 
+	 * if (isEmpty()) return -1;
+	 * 
+	 * return degree(root, key);
+	 * 
+	 * }
+	 * 
+	 * private int degree(Node node, K key) { if (node == null) { return -1; } else
+	 * if (key.compareTo(node.key) == 0) { if (node.isLeaf()) return 0; else { if
+	 * (node.right != null && node.left != null) return 2; return 1; } } return
+	 * degree(node.next(key), key); }
+	 */
 
-		if (isEmpty())
+	@Override
+	public int degree(K key) {
+		if (isEmpty() || search(key) == null)
 			return -1;
 
-		return degree(root, key);
-
+		return degree(root.left, root.key, key) + degree(root.right, root.key, key);
 	}
 
-	private int degree(Node node, K key) {
-		if (node == null) {
-			return -1;
-		} else if (key.compareTo(node.key) == 0) {
-			if (node.isLeaf())
-				return 0;
-			else {
-				if (node.right != null && node.left != null)
-					return 2;
-				return 1;
-			}
+	private int degree(Node node, K fatherKey, K searchedKey) {
+
+		if (node != null) {
+			if (fatherKey.compareTo(searchedKey) == 0)
+
+				return 1 + degree(node.left, node.key, searchedKey) + degree(node.right, node.key, searchedKey);
+
+			return degree(node.left, node.key, searchedKey) + degree(node.right, node.key, searchedKey);
+
 		}
-		return degree(node.next(key), key);
+
+		return 0;
+
 	}
 
 	@Override
