@@ -441,7 +441,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> implements BinarySearc
 
 	private String ancestors(Node node, K key, String anc) {
 
-		anc += "{" + node.key + "} ";
+		anc += node.key + " ";
 
 		if (node.key.compareTo(key) != 0)
 			return ancestors(node.next(key), key, anc);
@@ -461,13 +461,13 @@ public class BinarySearchTree<K extends Comparable<K>, V> implements BinarySearc
 		if (node == null)
 			return null;
 
-		return "{" + node.key + "} " + descendents(node.left) + descendents(node.right);
+		return node.key + " " + descendents(node.left) + descendents(node.right);
 	}
 
 	private String descendents(Node node) {
 
 		if (node != null)
-			return "{" + node.key + "} " + (descendents(node.left) + descendents(node.right));
+			return node.key + " " + (descendents(node.left) + descendents(node.right));
 
 		return "";
 
