@@ -294,21 +294,6 @@ public class BinarySearchTree<K extends Comparable<K>, V> implements BinarySearc
 
 	}
 
-	/*
-	 * public int degree(K key) {
-	 * 
-	 * if (isEmpty()) return -1;
-	 * 
-	 * return degree(root, key);
-	 * 
-	 * }
-	 * 
-	 * private int degree(Node node, K key) { if (node == null) { return -1; } else
-	 * if (key.compareTo(node.key) == 0) { if (node.isLeaf()) return 0; else { if
-	 * (node.right != null && node.left != null) return 2; return 1; } } return
-	 * degree(node.next(key), key); }
-	 */
-
 	@Override
 	public int degree(K key) {
 		if (isEmpty() || search(key) == null)
@@ -351,8 +336,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> implements BinarySearc
 			if (deg > maior)
 				maior = deg;
 
-			degreeTree(node.left, maior);
-			degreeTree(node.right, maior);
+			return Math.max(degreeTree(node.left, maior), degreeTree(node.right, maior));
 
 		}
 
