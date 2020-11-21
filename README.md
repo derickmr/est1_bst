@@ -1,2 +1,2 @@
 # est1_bst
-Binary Search Tree - Estruturas 1
+Binary Search Tree - Data Structures
